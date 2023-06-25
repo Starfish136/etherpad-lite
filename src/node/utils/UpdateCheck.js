@@ -1,22 +1,25 @@
 'use strict';
 const semver = require('semver');
 const settings = require('./Settings');
-const request = require('request');
-
+const axios = require('axios');
 let infos;
 
-const loadEtherpadInformations = () => new Promise((resolve, reject) => {
-  request('https://static.etherpad.org/info.json', (er, response, body) => {
-    if (er) return reject(er);
+const loadEtherpadInformations = () =>
+  axios.get('https://static.etherpad.org/info.json')
+      .then(async resp => {
+        try {
+          infos = await resp.data;
+          if (infos === undefined || infos === null) {
+            await Promise.reject("Could not retrieve current version")
+            return
+          }
+          return await Promise.resolve(infos);
+        }
+        catch (err) {
+          return   await Promise.reject(err);
+        }
+      })
 
-    try {
-      infos = JSON.parse(body);
-      return resolve(infos);
-    } catch (err) {
-      return reject(err);
-    }
-  });
-});
 
 exports.getLatestVersion = () => {
   exports.needsUpdate();

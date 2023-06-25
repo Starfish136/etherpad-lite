@@ -3,10 +3,9 @@
 const log4js = require('log4js');
 const plugins = require('./plugins');
 const hooks = require('./hooks');
-const request = require('request');
 const runCmd = require('../../../node/utils/run_cmd');
 const settings = require('../../../node/utils/Settings');
-
+const axios = require('axios');
 const logger = log4js.getLogger('plugins');
 
 const onAllTasksFinished = async () => {
@@ -77,22 +76,22 @@ exports.getAvailablePlugins = (maxCacheAge) => {
       return resolve(exports.availablePlugins);
     }
 
-    request('https://static.etherpad.org/plugins.json', (er, response, plugins) => {
-      if (er) return reject(er);
+      axios.get('https://static.etherpad.org/plugins.json')
+        .then(pluginsLoaded=>{
+          let plugins;
+          try {
+            plugins = JSON.parse(pluginsLoaded.data);
+          } catch (err) {
+            logger.error(`error parsing plugins.json: ${err.stack || err}`);
+            plugins = [];
+          }
 
-      try {
-        plugins = JSON.parse(plugins);
-      } catch (err) {
-        logger.error(`error parsing plugins.json: ${err.stack || err}`);
-        plugins = [];
-      }
-
-      exports.availablePlugins = plugins;
-      cacheTimestamp = nowTimestamp;
-      resolve(plugins);
-    });
-  });
-};
+          exports.availablePlugins = plugins;
+          cacheTimestamp = nowTimestamp;
+          resolve(plugins);
+        })
+  })
+}
 
 
 exports.search = (searchTerm, maxCacheAge) => exports.getAvailablePlugins(maxCacheAge).then(
