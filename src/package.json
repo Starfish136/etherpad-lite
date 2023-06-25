@@ -54,14 +54,13 @@
     "mime-types": "^2.1.35",
     "openapi-backend": "^5.9.2",
     "proxy-addr": "^2.0.7",
-    "npm": "^8.19.4",
     "rate-limiter-flexible": "^2.4.1",
     "rehype": "^12.0.1",
     "rehype-minify-whitespace": "^5.0.1",
     "resolve": "1.22.2",
     "security": "1.0.0",
-    "semver": "^7.5.2",
-    "socket.io": "^2.4.1",
+    "semver": "^7.5.3",
+    "socket.io": "^2.5.0",
     "superagent": "^8.0.9",
     "axios": "^1.4.0",
     "terser": "^5.18.1",
@@ -93,8 +92,8 @@
     "typescript": "^5.1.3"
   },
   "engines": {
-    "node": ">=14.15.0",
-    "npm": ">=6.14.0"
+    "node": ">=18.16.1",
+    "npm": ">=9.5.1"
   },
   "repository": {
     "type": "git",
